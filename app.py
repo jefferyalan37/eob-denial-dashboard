@@ -50,7 +50,10 @@ claim_df = pd.read_csv("claims.csv") if os.path.exists("claims.csv") else pd.Dat
 deposit_data = pd.read_csv("simulated_bank_deposits.csv") if os.path.exists("simulated_bank_deposits.csv") else pd.DataFrame()
 
 # Create tabs
-tabs = st.tabs([" Overview", " Claims", " Reconciliation", " Exceptions", "Export ERA", " RCM Tool Comparison", "Middleware Walkthrough"])
+tabs = st.tabs([
+    " Overview", " Claims", " Reconciliation", " Exceptions", "Export ERA",
+    " RCM Tool Comparison", "Middleware Walkthrough"
+])
 
 # Sidebar filters
 st.sidebar.header(" Filter Options")
@@ -58,8 +61,10 @@ unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
 unique_cpts = summary_df['CPT Code'].unique() if not summary_df.empty else []
 selected_payers = st.sidebar.multiselect("Select Payers", unique_payers, default=list(unique_payers))
 selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cpts, default=list(unique_cpts))
-filtered_summary = summary_df[(summary_df['Payer'].isin(selected_payers)) & (summary_df['CPT Code'].isin(selected_cpts))] if not summary_df.empty else pd.DataFrame()
-filtered_claims = claim_df[(claim_df['Payer'].isin(selected_payers)) & (claim_df['CPT Code'].isin(selected_cpts))] if not claim_df.empty else pd.DataFrame()
+filtered_summary = summary_df[(summary_df['Payer'].isin(selected_payers)) & 
+                               (summary_df['CPT Code'].isin(selected_cpts))] if not summary_df.empty else pd.DataFrame()
+filtered_claims = claim_df[(claim_df['Payer'].isin(selected_payers)) & 
+                           (claim_df['CPT Code'].isin(selected_cpts))] if not claim_df.empty else pd.DataFrame()
 
 # Sidebar file upload
 st.sidebar.subheader("Upload New ERA or Claim File")
@@ -76,7 +81,9 @@ if uploaded_file:
 
 # Sidebar demo files
 st.sidebar.subheader("Demo Files")
-st.sidebar.download_button("Download Sample ERA (835)", data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", file_name="sample_era.edi", mime="text/plain")
+st.sidebar.download_button("Download Sample ERA (835)", 
+                            data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", 
+                            file_name="sample_era.edi", mime="text/plain")
 if os.path.exists("sample_eob.pdf"):
     with open("sample_eob.pdf", "rb") as f:
         st.sidebar.download_button("Download Sample EOB (PDF)", data=f.read(), file_name="sample_eob.pdf", mime="application/pdf")
@@ -109,6 +116,73 @@ with tabs[3]:
 with tabs[4]:
     st.subheader("Export ERA File")
     st.text("Coming soon: Generate 835 files from processed results.")
+
+with tabs[5]:  # "RCM Tool Comparison" tab
+    st.subheader("RCM Tool Comparison (AI + Middleware Integration)")
+    st.markdown(
+        """
+        | Feature Category          | Legacy RCM Tools (Waystar, Change, Availity) | Your AI Middleware Suite                    |
+        | ------------------------- | -------------------------------------------- | ------------------------------------------- |
+        | **EOB Ingestion**         | Manual upload or 835-only SFTP               | Multi-source: OCR scans + X12 835 + Lockbox |
+        | **Data Parsing**          | Limited, rule-based                          | AI/ML parsing + schema unification          |
+        | **Denial Prediction**     | Not available                                | Predictive model (Random Forest, XGBoost)   |
+        | **Reconciliation Engine** | Manual match / high error rate               | AI match logic + flag mismatches            |
+        | **Alerts/Exceptions**     | Static rules                                 | Dynamic risk scores, anomaly detection      |
+        | **Payer Performance**     | Aggregate reporting                          | Latency, denial rate, underpay trends       |
+        | **Integrations**          | Requires vendor IT support                   | Plug-and-play with OpenEMR, Epic, Dentrix   |
+        | **AI Forecasting**        | None                                         | Forecast insurance revenue, denials         |
+        | **Deployment**            | Black-box SaaS                               | Self-hosted or hybrid (Streamlit/Cloud)     |
+        | **Customization**         | Little to none                               | Full logic access, editable flows           |
+        """
+    )
+
+with tabs[6]:  # "Middleware Walkthrough" tab
+    st.subheader("Middleware Walkthrough (Dental / PNC / OpenEMR)")
+    st.markdown(
+        """
+        ### **1. Ingestion Layer**
+        * Accepts:
+          * ERA 835 from PNC Lockbox (via SFTP)
+          * Scanned EOB PDFs
+          * Manual uploads from front office
+        * Automatically routes files to parsing pipeline
+
+        ### **2. Parsing & AI Extraction**
+        * Uses OCR on PDFs with layout-aware models
+        * Parses 835 X12 with schema validation
+        * AI classifies denial reasons and payment types
+        * Canonical EOB schema created across formats
+
+        ### **3. Reconciliation Engine**
+        * Joins:
+          * Parsed EOBs
+          * Bank deposit records (lockbox feed)
+        * Auto-matches claims, flags:
+          * Underpayments
+          * Duplicates
+          * Partial payments
+
+        ### **4. Business Rules + Alerts**
+        * Uses AI to:
+          * Predict appeals success
+          * Score denials by recoverability
+        * Sends alerts for:
+          * Payers exceeding denial thresholds
+          * Claims missing documentation
+
+        ### **5. Reporting & Forecasting**
+        * Real-time dashboards in Streamlit:
+          * Denial trends, payer report cards
+          * Forecasted insurance inflows
+        * Exportable PDF reports, Excel, API integrations
+
+        ### **6. Integrations**
+        * Fully integrated with:
+          * OpenEMR (via REST API and DB sync)
+          * PNC Treasury (lockbox FTP + manual override)
+          * Optional: Epic, Dentrix, Athena
+        """
+    )
 
 # Sidebar metrics
 st.sidebar.markdown("---")
