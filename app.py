@@ -13,14 +13,40 @@ import pytesseract
 import tempfile
 import datetime
 
-st.set_page_config(page_title="Denial Prediction Dashboard", layout="wide")
-st.title("Denial Prediction & Claims Intelligence Dashboard")
+# Add custom font styling
+st.markdown(
+    """
+    <style>
+    /* Import the font from Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap');
 
-user_password = st.secrets.get("dashboard_password", "admin123")
-password = st.text_input("Enter Dashboard Password:", type="password")
-if password != user_password:
-    st.warning("Enter the correct demo password to continue.")
-    st.stop()
+    /* Apply the font to the entire app */
+    html, body, [class*="css"] {
+        font-family: 'Old Standard TT', serif;
+    }
+
+    /* Optional: Define specific classes for different styles */
+    .old-standard-tt-regular {
+        font-family: "Old Standard TT", serif;
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    .old-standard-tt-bold {
+        font-family: "Old Standard TT", serif;
+        font-weight: 700;
+        font-style: normal;
+    }
+
+    .old-standard-tt-regular-italic {
+        font-family: "Old Standard TT", serif;
+        font-weight: 400;
+        font-style: italic;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 summary_df = pd.read_csv("summary.csv") if os.path.exists("summary.csv") else pd.DataFrame()
 claim_df = pd.read_csv("claims.csv") if os.path.exists("claims.csv") else pd.DataFrame()
