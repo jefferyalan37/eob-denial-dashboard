@@ -14,7 +14,7 @@ import tempfile
 import datetime
 
 st.set_page_config(page_title="Denial Prediction Dashboard", layout="wide")
-st.title("🧠 Denial Prediction & Claims Intelligence Dashboard")
+st.title("Denial Prediction & Claims Intelligence Dashboard")
 
 user_password = st.secrets.get("dashboard_password", "admin123")
 password = st.text_input("Enter Dashboard Password:", type="password")
@@ -26,7 +26,7 @@ summary_df = pd.read_csv("summary.csv") if os.path.exists("summary.csv") else pd
 claim_df = pd.read_csv("claims.csv") if os.path.exists("claims.csv") else pd.DataFrame()
 deposit_data = pd.read_csv("simulated_bank_deposits.csv") if os.path.exists("simulated_bank_deposits.csv") else pd.DataFrame()
 
-tabs = st.tabs(["📊 Overview", "📁 Claims", "🔄 Reconciliation", "🚨 Exceptions", "📤 Export ERA", "📌 RCM Tool Comparison", "🧪 Middleware Walkthrough"])
+tabs = st.tabs([" Overview", " Claims", " Reconciliation", " Exceptions", "Export ERA", " RCM Tool Comparison", "Middleware Walkthrough"])
 
 st.sidebar.header("🔍 Filter Options")
 unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
@@ -36,26 +36,26 @@ selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cpts, default=
 filtered_summary = summary_df[(summary_df['Payer'].isin(selected_payers)) & (summary_df['CPT Code'].isin(selected_cpts))] if not summary_df.empty else pd.DataFrame()
 filtered_claims = claim_df[(claim_df['Payer'].isin(selected_payers)) & (claim_df['CPT Code'].isin(selected_cpts))] if not claim_df.empty else pd.DataFrame()
 
-st.sidebar.subheader("📂 Upload New ERA or Claim File")
+st.sidebar.subheader("Upload New ERA or Claim File")
 uploaded_file = st.sidebar.file_uploader("Choose a CSV file", type="csv")
 if uploaded_file:
     uploaded_data = pd.read_csv(uploaded_file)
-    st.write("📄 Preview of Uploaded Data")
+    st.write("Preview of Uploaded Data")
     st.dataframe(uploaded_data.head(), use_container_width=True)
     if 'Billed Amount' in uploaded_data.columns and 'Amount Paid' in uploaded_data.columns:
         uploaded_data['Billed/Paid Ratio'] = uploaded_data['Billed Amount'] / uploaded_data['Amount Paid']
         uploaded_data['Predicted Denial'] = uploaded_data['Billed/Paid Ratio'].apply(lambda x: 1 if x > 1.3 else 0)
-        st.write("📊 Inline Denial Predictions")
+        st.write(" Inline Denial Predictions")
         st.dataframe(uploaded_data[['Claim ID', 'Payer', 'Billed Amount', 'Amount Paid', 'Predicted Denial']], use_container_width=True)
 
 st.sidebar.subheader("🧪 Demo Files")
-st.sidebar.download_button("📥 Download Sample ERA (835)", data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", file_name="sample_era.edi", mime="text/plain")
+st.sidebar.download_button("Download Sample ERA (835)", data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", file_name="sample_era.edi", mime="text/plain")
 if os.path.exists("sample_eob.pdf"):
     with open("sample_eob.pdf", "rb") as f:
-        st.sidebar.download_button("📥 Download Sample EOB (PDF)", data=f.read(), file_name="sample_eob.pdf", mime="application/pdf")
+        st.sidebar.download_button("Download Sample EOB (PDF)", data=f.read(), file_name="sample_eob.pdf", mime="application/pdf")
 
 with tabs[0]:
-    st.subheader("📊 Predicted Denials Summary")
+    st.subheader(" Predicted Denials Summary")
     if not filtered_claims.empty:
         denial_counts = filtered_claims['Predicted Denial'].value_counts().rename({0: "Not Denied", 1: "Predicted Denied"})
         st.bar_chart(denial_counts)
