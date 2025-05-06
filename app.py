@@ -28,7 +28,7 @@ deposit_data = pd.read_csv("simulated_bank_deposits.csv") if os.path.exists("sim
 
 tabs = st.tabs([" Overview", " Claims", " Reconciliation", " Exceptions", "Export ERA", " RCM Tool Comparison", "Middleware Walkthrough"])
 
-st.sidebar.header("🔍 Filter Options")
+st.sidebar.header(" Filter Options")
 unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
 unique_cpts = summary_df['CPT Code'].unique() if not summary_df.empty else []
 selected_payers = st.sidebar.multiselect("Select Payers", unique_payers, default=list(unique_payers))
@@ -48,7 +48,7 @@ if uploaded_file:
         st.write(" Inline Denial Predictions")
         st.dataframe(uploaded_data[['Claim ID', 'Payer', 'Billed Amount', 'Amount Paid', 'Predicted Denial']], use_container_width=True)
 
-st.sidebar.subheader("🧪 Demo Files")
+st.sidebar.subheader("Demo Files")
 st.sidebar.download_button("Download Sample ERA (835)", data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", file_name="sample_era.edi", mime="text/plain")
 if os.path.exists("sample_eob.pdf"):
     with open("sample_eob.pdf", "rb") as f:
@@ -66,20 +66,20 @@ with tabs[0]:
         st.write("No claims data available for visualization.")
 
 with tabs[1]:
-    st.subheader("📁 All Claims")
+    st.subheader("All Claims")
     st.dataframe(filtered_claims, use_container_width=True)
 
 with tabs[2]:
-    st.subheader("🔄 Reconciliation View")
+    st.subheader("Reconciliation View")
     st.dataframe(deposit_data.head(), use_container_width=True)
 
 with tabs[3]:
-    st.subheader("🚨 Exceptions")
+    st.subheader("Exceptions")
     exceptions = filtered_claims[filtered_claims['Predicted Denial'] == 1] if not filtered_claims.empty else pd.DataFrame()
     st.dataframe(exceptions, use_container_width=True)
 
 with tabs[4]:
-    st.subheader("📤 Export ERA File")
+    st.subheader("Export ERA File")
     st.text("Coming soon: Generate 835 files from processed results.")
 
 st.sidebar.markdown("---")
