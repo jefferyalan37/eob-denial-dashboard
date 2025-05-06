@@ -12,7 +12,23 @@ from pdf2image import convert_from_bytes
 import pytesseract
 import tempfile
 import datetime
+# Add custom styling for font color and background color
+st.markdown(
+    """
+    <style>
+    /* Change font color to black */
+    html, body, [class*="css"] {
+        color: black;
+    }
 
+    /* Change all black backgrounds to white */
+    [class*="css"] {
+        background-color: white !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # Add custom font styling
 st.markdown(
     """
