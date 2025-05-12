@@ -6,44 +6,49 @@ import os
 import datetime
 
 # Force PNC styling with IBM Plex Sans
-st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="PNC RCM Demo", page_icon="")
-st.markdown("""
-<link href='https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap' rel='stylesheet'>
-<style>
-    html, body, [class*="css"] {
-        font-family: 'Assistant', sans-serif !important;
-        background-color: #ffffff !important;
-        color: #000000 !important;
-    }
-    section[data-testid="stSidebar"] {
-        background-color: #f1f3f5 !important;
-        color: #000000 !important;
-        padding: 20px 10px 20px 20px;
-    }
-    section[data-testid="stSidebar"] .st-b5 {
-        color: #002f6c !important;
-        font-weight: 700;
-    }
-    .stButton>button {
-        background-color: #002f6c !important;
-        color: white !important;
-        border-radius: 4px;
-        border: none;
-        padding: 8px 16px;
-        font-weight: 600;
-    }
-    .stButton>button:hover {
-        background-color: #004785 !important;
-        color: white !important;
-    }
-</style>
-<div style='display: flex; align-items: center; gap: 16px; margin-bottom: 20px;'>
-    <img src='https://upload.wikimedia.org/wikipedia/commons/7/79/PNC_Bank_logo.svg' alt='PNC Logo' width='60'/>
-    <h1 style='font-family: "Assistant", sans-serif; font-size: 32px; font-weight: 700; margin: 0;'>
-        Denial Prediction & Claims Intelligence Dashboard
-    </h1>
-</div>
-""", unsafe_allow_html=True)
+st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="PNC RCM Demo", page_icon="📋")
+
+st.markdown(
+    '''
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body, [class*="css"] {
+            font-family: 'Assistant', sans-serif !important;
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        section[data-testid="stSidebar"] {
+            background-color: #f1f3f5 !important;
+            color: #000000 !important;
+            padding: 20px 10px 20px 20px;
+        }
+        section[data-testid="stSidebar"] .st-b5 {
+            color: #002f6c !important;
+            font-weight: 700;
+        }
+        .stButton>button {
+            background-color: #002f6c !important;
+            color: white !important;
+            border-radius: 4px;
+            border: none;
+            padding: 8px 16px;
+            font-weight: 600;
+        }
+        .stButton>button:hover {
+            background-color: #004785 !important;
+            color: white !important;
+        }
+    </style>
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/PNC_Bank_logo.svg" alt="PNC Logo" width="60"/>
+        <h1 style="font-family: 'Assistant', sans-serif; font-size: 32px; font-weight: 700; margin: 0;">
+            Denial Prediction & Claims Intelligence Dashboard
+        </h1>
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
+
     
 """, unsafe_allow_html=True)
 
