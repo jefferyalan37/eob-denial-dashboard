@@ -6,7 +6,7 @@ import os
 import datetime
 
 # Force PNC styling with IBM Plex Sans
-st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="PNC RCM Demo", page_icon="📋")
+st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="PNC RCM Demo", page_icon="")
 st.markdown("""
 <link href='https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap' rel='stylesheet'>
 <style>
