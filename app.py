@@ -16,7 +16,25 @@ st.markdown("""
         color: #000000 !important;
     }
     section[data-testid="stSidebar"] {
-        background-color: #f4f4f4 !important;
+        background-color: #f1f3f5 !important;
+        color: #000000 !important;
+        padding: 20px 10px 20px 20px;
+    }
+    section[data-testid="stSidebar"] .st-b5 {
+        color: #002f6c !important;
+        font-weight: 700;
+    }
+    .stButton>button {
+        background-color: #002f6c !important;
+        color: white !important;
+        border-radius: 4px;
+        border: none;
+        padding: 8px 16px;
+        font-weight: 600;
+    }
+    .stButton>button:hover {
+        background-color: #004785 !important;
+        color: white !important;
     }
 </style>
 <div style='display: flex; align-items: center; gap: 16px; margin-bottom: 20px;'>
@@ -31,7 +49,7 @@ st.markdown("""
 
 # Title
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap' rel='stylesheet'>
 <style>
     html, body, [class*="css"] {
         font-family: 'Assistant', sans-serif !important;
@@ -39,11 +57,29 @@ st.markdown("""
         color: #000000 !important;
     }
     section[data-testid="stSidebar"] {
-        background-color: #f4f4f4 !important;
+        background-color: #f1f3f5 !important;
+        color: #000000 !important;
+        padding: 20px 10px 20px 20px;
+    }
+    section[data-testid="stSidebar"] .st-b5 {
+        color: #002f6c !important;
+        font-weight: 700;
+    }
+    .stButton>button {
+        background-color: #002f6c !important;
+        color: white !important;
+        border-radius: 4px;
+        border: none;
+        padding: 8px 16px;
+        font-weight: 600;
+    }
+    .stButton>button:hover {
+        background-color: #004785 !important;
+        color: white !important;
     }
 </style>
 <div style='display: flex; align-items: center; gap: 16px; margin-bottom: 20px;'>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/PNC_Bank_logo.svg" alt="PNC Logo" width="60"/>
+    <img src='https://upload.wikimedia.org/wikipedia/commons/7/79/PNC_Bank_logo.svg' alt='PNC Logo' width='60'/>
     <h1 style='font-family: "Assistant", sans-serif; font-size: 32px; font-weight: 700; margin: 0;'>
         Denial Prediction & Claims Intelligence Dashboard
     </h1>
@@ -102,8 +138,8 @@ if uploaded_file:
         st.dataframe(uploaded_data[['Claim ID', 'Payer', 'Billed Amount', 'Amount Paid', 'Predicted Denial']], use_container_width=True)
 
 # Demo file download
-st.sidebar.subheader("Demo Files")
-st.sidebar.download_button("Download Sample ERA (835)", data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", file_name="sample_era.edi", mime="text/plain")
+st.sidebar.subheader("Sample ERA + EOB Files")
+st.sidebar.download_button("⬇ Download Sample ERA File", data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", file_name="sample_era.edi", mime="text/plain")
 if os.path.exists("sample_eob.pdf"):
     with open("sample_eob.pdf", "rb") as f:
         st.sidebar.download_button("Download Sample EOB (PDF)", data=f.read(), file_name="sample_eob.pdf", mime="application/pdf")
