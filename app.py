@@ -1,3 +1,4 @@
+# app.py
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -13,7 +14,6 @@ st.markdown("""
         color: black !important;
         background-color: white !important;
         font-family: 'Neulis Sans', Arial, sans-serif !important;
-        font-weight: 300 !important;
     }
 
     .stTitle, .stHeader, .stSubheader {
@@ -33,7 +33,10 @@ claim_df = pd.read_csv("claims.csv") if os.path.exists("claims.csv") else pd.Dat
 deposit_data = pd.read_csv("simulated_bank_deposits.csv") if os.path.exists("simulated_bank_deposits.csv") else pd.DataFrame()
 
 # ── Tabs ──
-tabs = st.tabs([" Overview", " Claims", " Reconciliation", " Exceptions", "Export ERA", " RCM Tool Comparison", "Middleware Walkthrough"])
+tabs = st.tabs([
+    " Overview", " Claims", " Reconciliation",
+    " Exceptions", "Export ERA", " RCM Tool Comparison", "Middleware Walkthrough"
+])
 
 # ── Sidebar Filters ──
 st.sidebar.header(" Filter Options")
@@ -41,8 +44,14 @@ unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
 unique_cpts = summary_df['CPT Code'].unique() if not summary_df.empty else []
 selected_payers = st.sidebar.multiselect("Select Payers", unique_payers, default=list(unique_payers))
 selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cpts, default=list(unique_cpts))
-filtered_summary = summary_df[(summary_df['Payer'].isin(selected_payers)) & (summary_df['CPT Code'].isin(selected_cpts))] if not summary_df.empty else pd.DataFrame()
-filtered_claims = claim_df[(claim_df['Payer'].isin(selected_payers)) & (claim_df['CPT Code'].isin(selected_cpts))] if not claim_df.empty else pd.DataFrame()
+filtered_summary = summary_df[
+    (summary_df['Payer'].isin(selected_payers)) &
+    (summary_df['CPT Code'].isin(selected_cpts))
+] if not summary_df.empty else pd.DataFrame()
+filtered_claims = claim_df[
+    (claim_df['Payer'].isin(selected_payers)) &
+    (claim_df['CPT Code'].isin(selected_cpts))
+] if not claim_df.empty else pd.DataFrame()
 
 # ── File Upload ──
 st.sidebar.subheader("Upload New ERA or Claim File")
