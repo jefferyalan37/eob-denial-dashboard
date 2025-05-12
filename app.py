@@ -42,6 +42,17 @@ st.markdown("""
 
 # Title
 st.markdown("""
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@700&display=swap" rel="stylesheet">
+<h1 style='
+    font-family: "Assistant", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0.5em;
+'>
+Denial Prediction & Claims Intelligence Dashboard
+</h1>
+""", unsafe_allow_html=True)
 <h1 style='
     font-family: Arial, sans-serif;
     color: #004c97;
