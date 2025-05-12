@@ -8,40 +8,29 @@ import datetime
 # Force PNC styling with IBM Plex Sans
 st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="PNC RCM Demo", page_icon="📋")
 st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap');
-    :root { color-scheme: light !important; }
-    html, body, [class*="css"] {
-        background-color: #ffffff !important;
-        color: #333333 !important;
-        font-family: 'IBM Plex Sans', 'Segoe UI', 'Helvetica Neue', sans-serif !important;
-        font-size: 15px !important;
-    }
-    .stTitle, .stHeader, .stSubheader {
-        color: #002f6c !important;
-        font-weight: 600 !important;
-        font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif !important;
-    }
-    section[data-testid="stSidebar"] {
-        background-color: #f4f4f4 !important;
-        color: #002f6c !important;
-    }
-    .stButton>button, button[kind="primary"] {
-        background-color: #f47b20 !important;
-        color: white !important;
-        border: none !important;
-    }
-    .stButton>button:hover {
-        background-color: #d46a1e !important;
-    }
-    a {
-        color: #f47b20 !important;
-    }
-    </style>
+    
 """, unsafe_allow_html=True)
 
 # Title
 st.markdown("""
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    html, body, [class*="css"] {
+        font-family: 'Assistant', sans-serif !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    section[data-testid="stSidebar"] {
+        background-color: #f4f4f4 !important;
+    }
+</style>
+<div style='display: flex; align-items: center; gap: 16px; margin-bottom: 20px;'>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/PNC_Bank_logo.svg" alt="PNC Logo" width="60"/>
+    <h1 style='font-family: "Assistant", sans-serif; font-size: 32px; font-weight: 700; margin: 0;'>
+        Denial Prediction & Claims Intelligence Dashboard
+    </h1>
+</div>
+""", unsafe_allow_html=True)
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@700&display=swap" rel="stylesheet">
 <h1 style='
     font-family: "Assistant", sans-serif;
