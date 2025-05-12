@@ -8,6 +8,24 @@ import datetime
 # Force PNC styling with IBM Plex Sans
 st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="PNC RCM Demo", page_icon="📋")
 st.markdown("""
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    html, body, [class*="css"] {
+        font-family: 'Assistant', sans-serif !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    section[data-testid="stSidebar"] {
+        background-color: #f4f4f4 !important;
+    }
+</style>
+<div style='display: flex; align-items: center; gap: 16px; margin-bottom: 20px;'>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/PNC_Bank_logo.svg" alt="PNC Logo" width="60"/>
+    <h1 style='font-family: "Assistant", sans-serif; font-size: 32px; font-weight: 700; margin: 0;'>
+        Denial Prediction & Claims Intelligence Dashboard
+    </h1>
+</div>
+""", unsafe_allow_html=True)
     
 """, unsafe_allow_html=True)
 
