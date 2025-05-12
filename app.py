@@ -7,10 +7,13 @@ import pandas as pd
 import plotly.express as px
 import os
 import datetime
-
-# Inject custom PNC theme CSS
+# Force Streamlit light mode + inject brand theme
+st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="PNC RCM Demo", page_icon="📋")
 st.markdown("""
 <style>
+:root {
+    color-scheme: light !important;
+}
 html, body, [class*="css"] {
     background-color: #ffffff !important;
     color: #333333 !important;
@@ -25,21 +28,24 @@ section[data-testid="stSidebar"] {
     background-color: #f4f4f4 !important;
     color: #002f6c !important;
 }
-button[kind="primary"], .stButton > button {
+.stButton>button, button[kind="primary"] {
     background-color: #f47b20 !important;
     color: white !important;
     border: none !important;
 }
-button[kind="primary"]:hover {
+.stButton>button:hover {
     background-color: #d46a1e !important;
 }
 a {
     color: #f47b20 !important;
 }
-.plotly-graph-div .xtick, .ytick {
-    fill: #002f6c !important;
-}
 </style>
+""", unsafe_allow_html=True)
+
+
+# Inject custom PNC theme CSS
+st.markdown("""
+
 """, unsafe_allow_html=True)
 
 # ── Title ─────────────────────────────────────────────────────────────────────
