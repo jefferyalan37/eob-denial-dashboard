@@ -41,7 +41,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Title
-st.title("Denial Prediction & Claims Intelligence Dashboard")
+st.markdown("""
+<h1 style='
+    font-family: Arial, sans-serif;
+    color: #004c97;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+'>
+Denial Prediction & Claims Intelligence Dashboard
+</h1>
+""", unsafe_allow_html=True)
 
 # Load data
 summary_df = pd.read_csv("summary.csv") if os.path.exists("summary.csv") else pd.DataFrame()
