@@ -6,21 +6,22 @@ import datetime
 
 # ── UI Styling ──
 st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300&display=swap');
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300&display=swap');
 
-html, body, [class*="css"] {
-    color: black !important;
-    background-color: white !important;
-    font-family: 'Neulis Sans', Arial, sans-serif !important;
-}
+    html, body, [class*="css"] {
+        color: black !important;
+        background-color: white !important;
+        font-family: 'Neulis Sans', Arial, sans-serif !important;
+        font-weight: 300 !important;
+    }
 
-.stTitle, .stHeader, .stSubheader {
-    color: black !important;
-    font-family: 'Neulis Sans', Arial, sans-serif !important;
-    font-weight: 300 !important;
-}
-</style>
+    .stTitle, .stHeader, .stSubheader {
+        color: black !important;
+        font-family: 'Neulis Sans', Arial, sans-serif !important;
+        font-weight: 300 !important;
+    }
+    </style>
 """, unsafe_allow_html=True)
 
 # ── Title ──
