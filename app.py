@@ -1,3 +1,4 @@
+
 # app.py
 # ──────────────────────────────────────────────────────────────────────────────
 # Denial Prediction & Claims Intelligence Dashboard – Streamlit (PNC/DSO Demo)
@@ -11,15 +12,14 @@ import datetime
 # ── UI Styling ────────────────────────────────────────────────────────────────
 st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arial&display=swap');
     html, body, [class*="css"] {
         color: black !important;
         background-color: white !important;
-        font-family: '', serif;
+        font-family: 'Arial', sans-serif !important;
     }
-    @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap');
     .stTitle, .stHeader, .stSubheader {
-        color: black !important;
-        font-family: 'Old Standard TT', serif !important;
+        font-weight: normal !important;
     }
     </style>
 """, unsafe_allow_html=True)
