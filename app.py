@@ -5,26 +5,38 @@ import plotly.express as px
 import os
 import datetime
 
-# ── Global CSS to enforce consistent font and styling ──
+# ── Global CSS for consistent custom font ──
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300;400;600&display=swap');
 
-    /* Apply custom font and ensure all elements use it */
+    /* Apply Neulis Sans across the app */
     html, body, [class*="css"] {
-        font-family: 'Source Sans Pro', Arial, sans-serif !important;
+        font-family: 'Neulis Sans', Arial, sans-serif !important;
         color: #000 !important;
-        background-color: #FFF !important;
+        background-color: #fff !important;
     }
-    /* Ensure Streamlit headers and titles use the same font */
+
+    /* Streamlit titles and headers */
     .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
-        font-family: 'Source Sans Pro', Arial, sans-serif !important;
+        font-family: 'Neulis Sans', Arial, sans-serif !important;
+        font-weight: 400 !important;
     }
-    /* Align download buttons and inputs to theme */
-    .stDownloadButton button, .stFileUploader, .stSelectbox {
-        font-family: 'Source Sans Pro', Arial, sans-serif !important;
+
+    /* Sidebar and widget text */
+    .css-1lcbmhc, /* text */
+    .css-1d391kg, /* sidebar headings */
+    .css-1v3fvcr, /* input labels */
+    .css-10trblm { /* buttons */
+        font-family: 'Neulis Sans', Arial, sans-serif !important;
     }
+
+    /* Tab labels */
+    .css-1e5imcs .css-1v0mbdj {
+        font-family: 'Neulis Sans', Arial, sans-serif !important;
+    }
+    </style>
     """,
     unsafe_allow_html=True
 )
