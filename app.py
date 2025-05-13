@@ -5,24 +5,29 @@ import plotly.express as px
 import os
 import datetime
 
-# ── UI Styling ──
-st.markdown("""
+# ── Global CSS to enforce consistent font and styling ──
+st.markdown(
+    """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
 
+    /* Apply custom font and ensure all elements use it */
     html, body, [class*="css"] {
-        color: black !important;
-        background-color: white !important;
-        font-family: 'Neulis Sans', Arial, sans-serif !important;
+        font-family: 'Source Sans Pro', Arial, sans-serif !important;
+        color: #000 !important;
+        background-color: #FFF !important;
     }
-
-    .stTitle, .stHeader, .stSubheader {
-        color: black !important;
-        font-family: 'Neulis Sans', Arial, sans-serif !important;
-        font-weight: 300 !important;
+    /* Ensure Streamlit headers and titles use the same font */
+    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
+        font-family: 'Source Sans Pro', Arial, sans-serif !important;
     }
-    </style>
-""", unsafe_allow_html=True)
+    /* Align download buttons and inputs to theme */
+    .stDownloadButton button, .stFileUploader, .stSelectbox {
+        font-family: 'Source Sans Pro', Arial, sans-serif !important;
+    }
+    """,
+    unsafe_allow_html=True
+)
 
 # ── Title ──
 st.title("Denial Prediction & Claims Intelligence Dashboard")
@@ -34,12 +39,12 @@ deposit_data = pd.read_csv("simulated_bank_deposits.csv") if os.path.exists("sim
 
 # ── Tabs ──
 tabs = st.tabs([
-    " Overview", " Claims", " Reconciliation",
-    " Exceptions", "Export ERA", " RCM Tool Comparison", "Middleware Walkthrough"
+    "Overview", "Claims", "Reconciliation",
+    "Exceptions", "Export ERA", "RCM Tool Comparison", "Middleware Walkthrough"
 ])
 
 # ── Sidebar Filters ──
-st.sidebar.header(" Filter Options")
+st.sidebar.header("Filter Options")
 unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
 unique_cpts = summary_df['CPT Code'].unique() if not summary_df.empty else []
 selected_payers = st.sidebar.multiselect("Select Payers", unique_payers, default=list(unique_payers))
@@ -68,12 +73,22 @@ if uploaded_file:
 
 # ── Demo Files ──
 st.sidebar.subheader("Demo Files")
-st.sidebar.download_button("Download Sample ERA (835)", data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~", file_name="sample_era.edi", mime="text/plain")
+st.sidebar.download_button(
+    "Download Sample ERA (835)",
+    data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~",
+    file_name="sample_era.edi",
+    mime="text/plain"
+)
 if os.path.exists("sample_eob.pdf"):
     with open("sample_eob.pdf", "rb") as f:
-        st.sidebar.download_button("Download Sample EOB (PDF)", data=f.read(), file_name="sample_eob.pdf", mime="application/pdf")
+        st.sidebar.download_button(
+            "Download Sample EOB (PDF)",
+            data=f.read(),
+            file_name="sample_eob.pdf",
+            mime="application/pdf"
+        )
 
-# ── Tab 0 ──
+# ── Tab: Overview ──
 with tabs[0]:
     st.subheader("Predicted Denials Summary")
     if not filtered_claims.empty:
@@ -82,36 +97,55 @@ with tabs[0]:
         st.bar_chart(denial_counts)
         pie_df = denial_counts.reset_index()
         pie_df.columns = ['Denial Type', 'Count']
-        st.plotly_chart(px.pie(pie_df, names='Denial Type', values='Count', title='Predicted Denials vs Non-Denials'), use_container_width=True)
+        st.plotly_chart(
+            px.pie(pie_df, names='Denial Type', values='Count', title='Predicted Denials vs Non-Denials'),
+            use_container_width=True
+        )
     else:
         st.write("No claims data available for visualization.")
 
-# ── Other Tabs ──
+# ── Tab: Claims ──
 with tabs[1]:
     st.subheader("All Claims")
     st.dataframe(filtered_claims, use_container_width=True)
+
+# ── Tab: Reconciliation ──
 with tabs[2]:
     st.subheader("Reconciliation View")
     st.dataframe(deposit_data.head(), use_container_width=True)
+
+# ── Tab: Exceptions ──
 with tabs[3]:
     st.subheader("Exceptions")
-    exceptions = filtered_claims[filtered_claims['Predicted Denial'] == 1] if not filtered_claims.empty else pd.DataFrame()
+    exceptions = filtered_claims[filtered_claims.get('Predicted Denial', 0) == 1]
     st.dataframe(exceptions, use_container_width=True)
+
+# ── Tab: Export ERA ──
 with tabs[4]:
     st.subheader("Export ERA File")
     st.text("Coming soon: Generate 835 files from processed results.")
+
+# ── Tab: RCM Tool Comparison ──
 with tabs[5]:
     st.subheader("RCM Tool Comparison")
     st.markdown("Comparison between legacy tools (Waystar, Availity) and our AI-enhanced RCM middleware.")
+
+# ── Tab: Middleware Walkthrough ──
 with tabs[6]:
     st.subheader("Middleware Walkthrough")
-    st.markdown("End-to-end pipeline: ingestion → OCR → parsing → reconciliation → analytics.")
+    st.markdown("End‑to‑end pipeline: ingestion → OCR → parsing → reconciliation → analytics.")
 
 # ── Sidebar Metrics ──
 st.sidebar.markdown("---")
 st.sidebar.metric("Total Claims", int(filtered_claims.shape[0]))
-st.sidebar.metric("Predicted Denials", int(filtered_claims['Predicted Denial'].sum()) if 'Predicted Denial' in filtered_claims.columns else 0)
-st.sidebar.metric("Actual Denials", int(filtered_claims['Actual Denial'].sum()) if 'Actual Denial' in filtered_claims.columns else 0)
+st.sidebar.metric(
+    "Predicted Denials",
+    int(filtered_claims.get('Predicted Denial', pd.Series(dtype=int)).sum())
+)
+st.sidebar.metric(
+    "Actual Denials",
+    int(filtered_claims.get('Actual Denial', pd.Series(dtype=int)).sum())
+)
 
 # ── Footer ──
 st.markdown("---")
