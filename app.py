@@ -5,21 +5,10 @@ import plotly.express as px
 import os
 import datetime
 
-# ── Global CSS for universal font override ──
+# ── Wrap entire app in custom font container ──
 st.markdown(
     """
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300;400;600&display=swap');
-      /* Apply Neulis Sans to every element, override all defaults */
-      * {
-        font-family: 'Neulis Sans', Arial, sans-serif !important;
-      }
-      /* Background and text colors */
-      html, body {
-        background-color: #fff !important;
-        color: #000 !important;
-      }
-    </style>
+    <div style="font-family: 'Neulis Sans', Arial, sans-serif;">
     """,
     unsafe_allow_html=True
 )
