@@ -5,24 +5,19 @@ import plotly.express as px
 import os
 import datetime
 
-# ── Global CSS for consistent custom font ──
+# ── Global CSS for universal font override ──
 st.markdown(
     """
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300;400;600&display=swap');
-      /* Force Neulis Sans across entire app */
-      .stApp, .stApp * {
+      /* Apply Neulis Sans to every element, override all defaults */
+      * {
         font-family: 'Neulis Sans', Arial, sans-serif !important;
       }
       /* Background and text colors */
-      html, body, .stApp {
+      html, body {
         background-color: #fff !important;
         color: #000 !important;
-      }
-      /* Ensure Streamlit headings use custom font */
-      .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
-        font-family: 'Neulis Sans', Arial, sans-serif !important;
-        font-weight: 400 !important;
       }
     </style>
     """,
