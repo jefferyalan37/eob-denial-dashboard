@@ -9,33 +9,21 @@ import datetime
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300;400;600&display=swap');
-
-    /* Apply Neulis Sans across the app */
-    html, body, [class*="css"] {
+      @import url('https://fonts.googleapis.com/css2?family=Neulis+Sans:wght@300;400;600&display=swap');
+      /* Force Neulis Sans across entire app */
+      .stApp, .stApp * {
         font-family: 'Neulis Sans', Arial, sans-serif !important;
-        color: #000 !important;
+      }
+      /* Background and text colors */
+      html, body, .stApp {
         background-color: #fff !important;
-    }
-
-    /* Streamlit titles and headers */
-    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
+        color: #000 !important;
+      }
+      /* Ensure Streamlit headings use custom font */
+      .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
         font-family: 'Neulis Sans', Arial, sans-serif !important;
         font-weight: 400 !important;
-    }
-
-    /* Sidebar and widget text */
-    .css-1lcbmhc, /* text */
-    .css-1d391kg, /* sidebar headings */
-    .css-1v3fvcr, /* input labels */
-    .css-10trblm { /* buttons */
-        font-family: 'Neulis Sans', Arial, sans-serif !important;
-    }
-
-    /* Tab labels */
-    .css-1e5imcs .css-1v0mbdj {
-        font-family: 'Neulis Sans', Arial, sans-serif !important;
-    }
+      }
     </style>
     """,
     unsafe_allow_html=True
