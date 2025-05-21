@@ -44,14 +44,14 @@ st.sidebar.header(" Filter Options")
 unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
 unique_cpts = summary_df['CPT Code'].unique() if not summary_df.empty else []
 selected_payers = st.sidebar.multiselect("Select Payers", unique_payers, default=list(unique_payers))
-selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cpts, default=list(unique_cpts))
+selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cdts, default=list(unique_cdts))
 filtered_summary = summary_df[
     (summary_df['Payer'].isin(selected_payers)) &
-    (summary_df['CDT Code'].isin(selected_cpts))
+    (summary_df['CDT Code'].isin(selected_cdts))
 ] if not summary_df.empty else pd.DataFrame()
 filtered_claims = claim_df[
     (claim_df['Payer'].isin(selected_payers)) &
-    (claim_df['CDT Code'].isin(selected_cpts))
+    (claim_df['CDT Code'].isin(selected_cdts))
 ] if not claim_df.empty else pd.DataFrame()
 
 # ── File Upload ───────────────────────────────────────────────────────────────
