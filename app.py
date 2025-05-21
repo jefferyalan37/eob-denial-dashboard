@@ -14,12 +14,13 @@ st.markdown("""
     html, body, [class*="css"] {
         color: black !important;
         background-color: white !important;
-        font-family: '', serif;
+        font-family: 'Times New Roman', Times, serif !important;
+        font-weight: 400 !important;
     }
-    @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap');
+
     .stTitle, .stHeader, .stSubheader {
-        color: black !important;
-        font-family: 'Old Standard TT', serif !important;
+        font-family: 'Times New Roman', Times, serif !important;
+        font-weight: 400 !important;
     }
     </style>
 """, unsafe_allow_html=True)
