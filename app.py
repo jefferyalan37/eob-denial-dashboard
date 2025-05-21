@@ -17,7 +17,6 @@ st.markdown("""
         font-family: 'Times New Roman', Times, serif !important;
         font-weight: 400 !important;
     }
-
     .stTitle, .stHeader, .stSubheader {
         font-family: 'Times New Roman', Times, serif !important;
         font-weight: 400 !important;
@@ -43,15 +42,18 @@ tabs = st.tabs([
 st.sidebar.header(" Filter Options")
 unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
 unique_cpts = summary_df['CPT Code'].unique() if not summary_df.empty else []
+
 selected_payers = st.sidebar.multiselect("Select Payers", unique_payers, default=list(unique_payers))
-selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cdts, default=list(unique_cdts))
+selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cpts, default=list(unique_cpts))
+
 filtered_summary = summary_df[
     (summary_df['Payer'].isin(selected_payers)) &
-    (summary_df['CDT Code'].isin(selected_cdts))
+    (summary_df['CPT Code'].isin(selected_cpts))
 ] if not summary_df.empty else pd.DataFrame()
+
 filtered_claims = claim_df[
     (claim_df['Payer'].isin(selected_payers)) &
-    (claim_df['CDT Code'].isin(selected_cdts))
+    (claim_df['CPT Code'].isin(selected_cpts))
 ] if not claim_df.empty else pd.DataFrame()
 
 # ── File Upload ───────────────────────────────────────────────────────────────
