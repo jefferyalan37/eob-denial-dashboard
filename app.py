@@ -1,116 +1,132 @@
+# app.py
+# ──────────────────────────────────────────────────────────────────────────────
+# Denial Prediction & Claims Intelligence Dashboard – Streamlit (PNC/DSO Demo)
+
+import streamlit as st
 import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-import random
+import plotly.express as px
 import os
+import datetime
 
-# Generate claims.csv
-n_claims = 50
-claim_ids = [f"CLM{str(i).zfill(4)}" for i in range(n_claims)]
-payers = ["Aetna", "Cigna", "Guardian", "MetLife", "Delta Dental"]
-cdt_codes = ["D0120", "D1110", "D2740", "D2950", "D4341", "D7210"]
-billed_amounts = np.random.randint(100, 2000, size=n_claims)
-paid_amounts = [amt if random.random() > 0.3 else amt * random.uniform(0.2, 0.8) for amt in billed_amounts]
-actual_denials = [0 if paid == billed else 1 for paid, billed in zip(paid_amounts, billed_amounts)]
-predicted_denials = [1 if billed / (paid if paid else 1) > 1.3 else 0 for billed, paid in zip(billed_amounts, paid_amounts)]
-dates = [(datetime.now() - timedelta(days=random.randint(0, 60))).strftime('%Y-%m-%d') for _ in range(n_claims)]
+# ── UI Styling ────────────────────────────────────────────────────────────────
+st.markdown("""
+    <style>
+    html, body, [class*="css"] {
+        color: black !important;
+        background-color: white !important;
+        font-family: 'Times New Roman', Times, serif !important;
+        font-weight: 400 !important;
+    }
 
-claims_df = pd.DataFrame({
-    "Claim ID": claim_ids,
-    "Payer": [random.choice(payers) for _ in range(n_claims)],
-    "CDT Code": [random.choice(cdt_codes) for _ in range(n_claims)],
-    "Billed Amount": billed_amounts,
-    "Amount Paid": paid_amounts,
-    "Actual Denial": actual_denials,
-    "Predicted Denial": predicted_denials,
-    "Date of Service": dates
-})
+    .stTitle, .stHeader, .stSubheader {
+        font-family: 'Times New Roman', Times, serif !important;
+        font-weight: 400 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# Generate summary.csv
-summary_df = claims_df.groupby(["Payer", "CDT Code"]).agg(
-    Total_Claims=("Claim ID", "count"),
-    Total_Billed=("Billed Amount", "sum"),
-    Total_Paid=("Amount Paid", "sum"),
-    Actual_Denials=("Actual Denial", "sum"),
-    Predicted_Denials=("Predicted Denial", "sum")
-).reset_index()
+# ── Title ─────────────────────────────────────────────────────────────────────
+st.title("Denial Prediction & Claims Intelligence Dashboard")
 
-# Generate simulated_bank_deposits.csv
-deposit_dates = [datetime.now() - timedelta(days=random.randint(1, 60)) for _ in range(n_claims)]
-deposit_ids = [f"DEP{str(i).zfill(4)}" for i in range(n_claims)]
-deposit_amounts = [paid + random.uniform(-10, 10) for paid in paid_amounts]
-deposit_sources = [random.choice(payers) for _ in range(n_claims)]
-methods = ["EFT", "Check", "ACH"]
+# ── Load Data ─────────────────────────────────────────────────────────────────
+summary_df = pd.read_csv("summary.csv") if os.path.exists("summary.csv") else pd.DataFrame()
+claim_df = pd.read_csv("claims.csv") if os.path.exists("claims.csv") else pd.DataFrame()
+deposit_data = pd.read_csv("simulated_bank_deposits.csv") if os.path.exists("simulated_bank_deposits.csv") else pd.DataFrame()
 
-deposit_df = pd.DataFrame({
-    "Deposit ID": deposit_ids,
-    "Deposit Date": [d.strftime('%Y-%m-%d') for d in deposit_dates],
-    "Payer": deposit_sources,
-    "Deposit Amount": deposit_amounts,
-    "Method": [random.choice(methods) for _ in range(n_claims)]
-})
+# ── Tabs ──────────────────────────────────────────────────────────────────────
+tabs = st.tabs([
+    " Overview", " Claims", " Reconciliation",
+    " Exceptions", "Export ERA", " RCM Tool Comparison", "Middleware Walkthrough"
+])
 
-# Save to CSV
-claims_df.to_csv("claims.csv", index=False)
-summary_df.to_csv("summary.csv", index=False)
-deposit_df.to_csv("simulated_bank_deposits.csv", index=False)
+# ── Sidebar Filters ───────────────────────────────────────────────────────────
+st.sidebar.header(" Filter Options")
+unique_payers = summary_df['Payer'].unique() if not summary_df.empty else []
+unique_cpts = summary_df['CPT Code'].unique() if not summary_df.empty else []
+selected_payers = st.sidebar.multiselect("Select Payers", unique_payers, default=list(unique_payers))
+selected_cpts = st.sidebar.multiselect("Select CPT Codes", unique_cdts, default=list(unique_cdts))
+filtered_summary = summary_df[
+    (summary_df['Payer'].isin(selected_payers)) &
+    (summary_df['CDT Code'].isin(selected_cdts))
+] if not summary_df.empty else pd.DataFrame()
+filtered_claims = claim_df[
+    (claim_df['Payer'].isin(selected_payers)) &
+    (claim_df['CDT Code'].isin(selected_cdts))
+] if not claim_df.empty else pd.DataFrame()
 
-import ace_tools as tools; tools.display_dataframe_to_user(name="Claims Data Preview", dataframe=claims_df.head())
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-import random
-import os
+# ── File Upload ───────────────────────────────────────────────────────────────
+st.sidebar.subheader("Upload New ERA or Claim File")
+uploaded_file = st.sidebar.file_uploader("Choose a CSV file", type="csv")
+if uploaded_file:
+    uploaded_data = pd.read_csv(uploaded_file)
+    st.write("Preview of Uploaded Data")
+    st.dataframe(uploaded_data.head(), use_container_width=True)
+    if 'Billed Amount' in uploaded_data.columns and 'Amount Paid' in uploaded_data.columns:
+        uploaded_data['Billed/Paid Ratio'] = uploaded_data['Billed Amount'] / uploaded_data['Amount Paid']
+        uploaded_data['Predicted Denial'] = uploaded_data['Billed/Paid Ratio'].apply(lambda x: 1 if x > 1.3 else 0)
+        st.write("Inline Denial Predictions")
+        st.dataframe(uploaded_data[['Claim ID', 'Payer', 'Billed Amount', 'Amount Paid', 'Predicted Denial']], use_container_width=True)
 
-# Generate claims.csv
-n_claims = 50
-claim_ids = [f"CLM{str(i).zfill(4)}" for i in range(n_claims)]
-payers = ["Aetna", "Cigna", "Guardian", "MetLife", "Delta Dental"]
-cdt_codes = ["D0120", "D1110", "D2740", "D2950", "D4341", "D7210"]
-billed_amounts = np.random.randint(100, 2000, size=n_claims)
-paid_amounts = [amt if random.random() > 0.3 else amt * random.uniform(0.2, 0.8) for amt in billed_amounts]
-actual_denials = [0 if paid == billed else 1 for paid, billed in zip(paid_amounts, billed_amounts)]
-predicted_denials = [1 if billed / (paid if paid else 1) > 1.3 else 0 for billed, paid in zip(billed_amounts, paid_amounts)]
-dates = [(datetime.now() - timedelta(days=random.randint(0, 60))).strftime('%Y-%m-%d') for _ in range(n_claims)]
+# ── Demo Files ────────────────────────────────────────────────────────────────
+st.sidebar.subheader("Demo Files")
+st.sidebar.download_button(
+    "Download Sample ERA (835)",
+    data="ISA*00*          *00*          *ZZ*ABC123         *ZZ*INSURER999    *...~",
+    file_name="sample_era.edi",
+    mime="text/plain"
+)
+if os.path.exists("sample_eob.pdf"):
+    with open("sample_eob.pdf", "rb") as f:
+        st.sidebar.download_button("Download Sample EOB (PDF)", data=f.read(), file_name="sample_eob.pdf", mime="application/pdf")
 
-claims_df = pd.DataFrame({
-    "Claim ID": claim_ids,
-    "Payer": [random.choice(payers) for _ in range(n_claims)],
-    "CDT Code": [random.choice(cdt_codes) for _ in range(n_claims)],
-    "Billed Amount": billed_amounts,
-    "Amount Paid": paid_amounts,
-    "Actual Denial": actual_denials,
-    "Predicted Denial": predicted_denials,
-    "Date of Service": dates
-})
+# ── Tab 0: Overview ───────────────────────────────────────────────────────────
+with tabs[0]:
+    st.subheader("Predicted Denials Summary")
+    if not filtered_claims.empty:
+        denial_counts = filtered_claims['Predicted Denial'].value_counts().rename({0: "Not Denied", 1: "Predicted Denied"})
+        st.bar_chart(denial_counts)
+        pie_df = denial_counts.reset_index()
+        pie_df.columns = ['Denial Type', 'Count']
+        st.plotly_chart(px.pie(pie_df, names='Denial Type', values='Count', title='Predicted Denials vs Non-Denials'), use_container_width=True)
+    else:
+        st.write("No claims data available for visualization.")
 
-# Generate summary.csv
-summary_df = claims_df.groupby(["Payer", "CDT Code"]).agg(
-    Total_Claims=("Claim ID", "count"),
-    Total_Billed=("Billed Amount", "sum"),
-    Total_Paid=("Amount Paid", "sum"),
-    Actual_Denials=("Actual Denial", "sum"),
-    Predicted_Denials=("Predicted Denial", "sum")
-).reset_index()
+# ── Tab 1: Claims ─────────────────────────────────────────────────────────────
+with tabs[1]:
+    st.subheader("All Claims")
+    st.dataframe(filtered_claims, use_container_width=True)
 
-# Generate simulated_bank_deposits.csv
-deposit_dates = [datetime.now() - timedelta(days=random.randint(1, 60)) for _ in range(n_claims)]
-deposit_ids = [f"DEP{str(i).zfill(4)}" for i in range(n_claims)]
-deposit_amounts = [paid + random.uniform(-10, 10) for paid in paid_amounts]
-deposit_sources = [random.choice(payers) for _ in range(n_claims)]
-methods = ["EFT", "Check", "ACH"]
+# ── Tab 2: Reconciliation ─────────────────────────────────────────────────────
+with tabs[2]:
+    st.subheader("Reconciliation View")
+    st.dataframe(deposit_data.head(), use_container_width=True)
 
-deposit_df = pd.DataFrame({
-    "Deposit ID": deposit_ids,
-    "Deposit Date": [d.strftime('%Y-%m-%d') for d in deposit_dates],
-    "Payer": deposit_sources,
-    "Deposit Amount": deposit_amounts,
-    "Method": [random.choice(methods) for _ in range(n_claims)]
-})
+# ── Tab 3: Exceptions ─────────────────────────────────────────────────────────
+with tabs[3]:
+    st.subheader("Exceptions")
+    exceptions = filtered_claims[filtered_claims['Predicted Denial'] == 1] if not filtered_claims.empty else pd.DataFrame()
+    st.dataframe(exceptions, use_container_width=True)
 
-# Save to CSV
-claims_df.to_csv("claims.csv", index=False)
-summary_df.to_csv("summary.csv", index=False)
-deposit_df.to_csv("simulated_bank_deposits.csv", index=False)
+# ── Tab 4: Export ERA ─────────────────────────────────────────────────────────
+with tabs[4]:
+    st.subheader("Export ERA File")
+    st.text("Coming soon: Generate 835 files from processed results.")
 
-import ace_tools as tools; tools.display_dataframe_to_user(name="Claims Data Preview", dataframe=claims_df.head())
+# ── Tab 5-6: Documentation Tabs ───────────────────────────────────────────────
+with tabs[5]:
+    st.subheader("RCM Tool Comparison")
+    st.markdown("Comparison between legacy tools (Waystar, Availity) and our AI-enhanced RCM middleware.")
+
+with tabs[6]:
+    st.subheader("Middleware Walkthrough")
+    st.markdown("End-to-end pipeline: ingestion → OCR → parsing → reconciliation → analytics.")
+
+# ── Sidebar Metrics ───────────────────────────────────────────────────────────
+st.sidebar.markdown("---")
+st.sidebar.metric("Total Claims", int(filtered_claims.shape[0]))
+st.sidebar.metric("Predicted Denials", int(filtered_claims['Predicted Denial'].sum()) if 'Predicted Denial' in filtered_claims.columns else 0)
+st.sidebar.metric("Actual Denials", int(filtered_claims['Actual Denial'].sum()) if 'Actual Denial' in filtered_claims.columns else 0)
+
+# ── Footer ────────────────────────────────────────────────────────────────────
+st.markdown("---")
+st.markdown(f"Dashboard updated on **{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}**")
